@@ -3,15 +3,20 @@
     <h1>Welcome to the Home Page</h1>
     <p>This is the main landing page.</p>
     <button @click="logout">logout</button>
+
+
+    <BoardList></BoardList>
   </div>
 </template>
 
 <script lang="ts">
 import {defineComponent} from 'vue';
 import api from "@/services/api";
+import BoardList from "@/layouts/BoardList.vue";
 
 export default defineComponent({
   name: 'Home',
+  components: {BoardList},
 
   methods:{
     logout(){

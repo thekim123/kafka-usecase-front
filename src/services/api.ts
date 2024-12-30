@@ -4,7 +4,7 @@ import {useAuthStore} from '@/stores/auth';
 const baseURL = 'http://localhost:8080';
 const tokenPrefix = 'Bearer ';
 const api = axios.create({
-  baseURL: 'http://localhost:8080', // 백엔드 URL
+  baseURL: 'http://localhost:9080', // 백엔드 URL
   withCredentials: true,
 });
 
