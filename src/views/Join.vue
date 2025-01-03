@@ -1,42 +1,44 @@
 <template>
-  <div class="container">
-    <h1>회원가입</h1>
-    <div v-if="errorMessage" id="error-message" style="color: red;">{{ errorMessage }}</div>
-    <div class="form-group">
-      <label for="username">사용자 이름:</label>
-      <input
-        type="text"
-        id="username"
-        v-model="username"
-        placeholder="사용자 이름을 입력하세요"
-        class="input"
-      />
-    </div>
-    <div class="form-group">
-      <label for="password">비밀번호:</label>
-      <input
-        type="password"
-        id="password"
-        v-model="password"
-        placeholder="비밀번호를 입력하세요"
-        class="input"
-      />
-    </div>
-    <div class="form-group">
-      <label for="confirmPassword">비밀번호 확인:</label>
-      <input
-        type="password"
-        id="confirmPassword"
-        v-model="confirmPassword"
-        placeholder="비밀번호를 다시 입력하세요"
-        class="input"
-      />
-    </div>
-    <div class="form-group">
-      <button @click="submitSignup" class="btn">회원가입</button>
-    </div>
-    <div class="form-group">
-      <a href="/login" class="link">이미 계정이 있으신가요? 로그인</a>
+  <div class="layout">
+    <div class="container">
+      <h1>회원가입</h1>
+      <div v-if="errorMessage" id="error-message" style="color: red;">{{ errorMessage }}</div>
+      <div class="form-group">
+        <label for="username">사용자 이름:</label>
+        <input
+          type="text"
+          id="username"
+          v-model="username"
+          placeholder="사용자 이름을 입력하세요"
+          class="input"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password">비밀번호:</label>
+        <input
+          type="password"
+          id="password"
+          v-model="password"
+          placeholder="비밀번호를 입력하세요"
+          class="input"
+        />
+      </div>
+      <div class="form-group">
+        <label for="confirmPassword">비밀번호 확인:</label>
+        <input
+          type="password"
+          id="confirmPassword"
+          v-model="confirmPassword"
+          placeholder="비밀번호를 다시 입력하세요"
+          class="input"
+        />
+      </div>
+      <div class="form-group">
+        <button @click="submitSignup" class="btn">회원가입</button>
+      </div>
+      <div class="form-group">
+        <a href="/login" class="link">이미 계정이 있으신가요? 로그인</a>
+      </div>
     </div>
   </div>
 </template>
@@ -90,8 +92,15 @@ export default {
 </script>
 
 <style scoped>
+.layout {
+  display: flex;
+  justify-content: center;
+}
+
 .container {
-  max-width: 500px;
+  background-color: #f2f2f2;
+  width: 500px;
+  height: 100%;
   margin: 0 auto;
   padding: 20px;
 }

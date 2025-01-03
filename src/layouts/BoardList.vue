@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="board">
     <h1>📋 게시판</h1>
 
     <!-- 게시글 작성 폼 -->
     <form @submit.prevent="submitPost">
       <h2>✍️ 게시글 작성</h2>
       <div>
-        <label>작성자 ID:</label>
+        <label>게시글 ID:</label>
         <input v-model.number="postRequest.authorId" type="number" required />
       </div>
       <div>
@@ -23,7 +23,7 @@
     <hr />
 
     <!-- 단일 게시글 조회 -->
-    <div>
+    <div class="container">
       <h2>🔍 단일 게시글 조회</h2>
       <label>게시글 ID로 조회:</label>
       <input v-model.number="searchId" type="number" placeholder="게시글 ID" />
@@ -43,7 +43,7 @@
     <hr />
 
     <!-- 게시글 리스트 조회 -->
-    <div>
+    <div class="container">
       <h2>📑 게시글 리스트</h2>
       <button @click="fetchBoardList">모든 게시글 조회</button>
     </div>
@@ -163,22 +163,40 @@ export default defineComponent({
 });
 </script>
 
----
-
 <style scoped>
+.board {
+  width: 600px;
+  background-color: #f2f2f2;
+  max-width: 100%;
+  margin: 0 auto; /* 중앙 정렬 */
+  padding: 20px; /* 여백 추가 */
+  box-sizing: border-box; /* 패딩 포함 박스 모델 */
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* 섹션 간 간격 */
+}
+
+.container{
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* 섹션 간 간격 */
+}
+
 h1 {
   text-align: center;
   margin-bottom: 20px;
 }
 
 form {
-  margin-bottom: 20px;
   display: flex;
   flex-direction: column;
+  gap: 10px; /* 입력 필드 간 간격 */
 }
 
 form div {
-  margin-bottom: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
 label {
@@ -190,17 +208,23 @@ input,
 textarea {
   padding: 8px;
   font-size: 14px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  box-sizing: border-box;
 }
 
 button {
-  margin-top: 10px;
-  padding: 10px;
+  padding: 10px 20px;
   font-size: 14px;
   cursor: pointer;
+  align-self: flex-start; /* 버튼을 왼쪽으로 정렬 */
 }
 
 hr {
   margin: 20px 0;
+  border: 0;
+  height: 1px;
+  background: #ddd;
 }
 
 div > p {
@@ -210,12 +234,20 @@ div > p {
 ul {
   list-style: none;
   padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px; /* 리스트 아이템 간 간격 */
 }
 
 ul li {
-  margin-bottom: 20px;
   padding: 10px;
+  background-color: white;
   border: 1px solid #ccc;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px; /* 텍스트 간 간격 */
 }
 </style>
+

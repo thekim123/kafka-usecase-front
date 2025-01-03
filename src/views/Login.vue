@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="login">
     <h1>Login</h1>
     <form @submit.prevent="handleLogin">
       <input v-model="username" placeholder="Username" />
@@ -50,3 +50,15 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+.login {
+  width: 300px;
+  height: 200px;
+  background-color: #00bd7e;
+  padding: 20px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+</style>

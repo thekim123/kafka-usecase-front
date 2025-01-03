@@ -4,12 +4,17 @@ import Login from '../views/Login.vue';
 import Join from '../views/Join.vue'
 import {useAuthStore} from "@/stores/auth";
 import api from "@/services/api";
+import Converter from "@/layouts/Converter.vue";
+import BoardList from "@/layouts/BoardList.vue";
 
 const routes = [
-  {path: '/', name: 'Home', component: Home},
-  {path: '/login', name: 'Login', component: Login},
-  {path: '/join', name: 'Join', component: Join},
+  { path: '/', name: 'Home', component: Home },
+  { path: '/login', name: 'Login', component: Login },
+  { path: '/join', name: 'Join', component: Join },
+  { path: '/board', name: 'Board', component: BoardList },
+  { path: '/convert', name: 'Convert', component: Converter },
 ];
+
 
 const router = createRouter({
   history: createWebHistory(),
