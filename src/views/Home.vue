@@ -9,7 +9,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import { useUserStore } from "@/stores/user.ts";
+import { useUserStore } from "@/stores/user";
 import api from "@/services/api";
 import Header from "@/layouts/Header.vue";
 import BoardList from "@/layouts/BoardList.vue";

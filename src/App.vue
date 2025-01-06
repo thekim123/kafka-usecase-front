@@ -64,7 +64,6 @@ hr {
 /* 메인 레이아웃 스타일 */
 .layout {
   flex: 1; /* Header를 제외한 나머지 공간을 차지 */
-  //overflow: auto; /* 내용이 많을 경우 스크롤 가능 */
   padding: 20px;
 }
 </style>

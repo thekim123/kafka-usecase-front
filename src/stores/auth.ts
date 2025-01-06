@@ -19,10 +19,10 @@ export const useAuthStore = defineStore('auth', {
 
   getters: {
     isAuthenticated: (state) => {
-      return !!state.accessToken
+      return !!state.accessToken;
     },
-    getAccessToken: () => {
-      return this.accessToken;
+    getAccessToken: (state) => {
+      return state.accessToken;
     },
   },
 

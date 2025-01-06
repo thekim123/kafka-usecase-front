@@ -1,11 +1,12 @@
-import {createRouter, createWebHistory} from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
-import Join from '../views/Join.vue'
-import {useAuthStore} from "@/stores/auth";
-import api from "@/services/api";
-import Converter from "@/layouts/Converter.vue";
-import BoardList from "@/layouts/BoardList.vue";
+import Join from '../views/Join.vue';
+import { useAuthStore } from '@/stores/auth';
+import api from '@/services/api';
+import Converter from '@/layouts/Converter.vue';
+import BoardList from '@/layouts/BoardList.vue';
+import { AxiosError } from 'axios';
 
 const routes = [
   { path: '/', name: 'Home', component: Home },
@@ -14,7 +15,6 @@ const routes = [
   { path: '/board', name: 'Board', component: BoardList },
   { path: '/convert', name: 'Convert', component: Converter },
 ];
-
 
 const router = createRouter({
   history: createWebHistory(),
@@ -27,7 +27,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (!(to.name === 'Join' || to.name === 'Login') && !authStore.isAuthenticated) {
     try {
-      const response = await api.post('/auth/refresh', {}, {withCredentials: true});
+      const response = await api.post('/auth/refresh', {}, { withCredentials: true });
       const accessToken = response?.data?.access || {};
 
       if (accessToken) {
@@ -36,9 +36,13 @@ router.beforeEach(async (to, from, next) => {
       } else {
         throw new Error('Access Token is missing');
       }
-    } catch (error) {
-      console.error('❌ 토큰 재발급 실패:', error.response?.data || error.message);
-      next({name: 'Login'});
+    } catch (error: unknown) {
+      if (error instanceof AxiosError) {
+        console.error('❌ 토큰 재발급 실패:', error.response?.data || error.message);
+      } else {
+        console.error('❌ 예상치 못한 오류:', error);
+      }
+      next({ name: 'Login' });
     }
   } else {
     next();

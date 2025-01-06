@@ -1,11 +1,14 @@
 <template>
   <div class="converter">
-    <h1>🎞 비식별 처리</h1>
+    <h1>🎞 영상 처리</h1>
 
     <!-- 게시글 작성 폼 -->
     <div class="converter">
-      <form @submit.prevent="summitConvert">
+      <form @submit.prevent="submitConvert">
         <h2>✍️ URL</h2>
+        <h2>
+          https://www.youtube.com/watch?v=bOgjkO7keBQ
+        </h2>
         <div>
           <label>URL:</label>
           <input v-model="convertRequest.url" type="text" required/>
@@ -24,83 +27,102 @@
     <div v-if="convertedUrl" class="result">
       <h3>처리 결과</h3>
       <ul>
-        <li><strong>outputPath</strong>
-          <a :href="`${convertedUrl.frameOutputPath}`" target="_blank">
-            {{ `${convertedUrl.frameOutputPath}` }}
-          </a>
+        <li><strong>Output Path:</strong>
+          <a :href="convertedUrl.outputPath" target="_blank">{{ convertedUrl.outputPath }}</a>
         </li>
-        <hr/>
-        <li><strong>영상 URL:</strong>
-          <a :href="`${convertedUrl.frameOutputPath}.mp4`" target="_blank">
-            {{ `${convertedUrl.frameOutputPath}.mp4` }}
-          </a>
+        <li><strong>First Frame URL:</strong>
+          <a :href="convertedUrl.firstFrameUrl" target="_blank">{{ convertedUrl.firstFrameUrl }}</a>
         </li>
-        <li><strong>프레임 URL:</strong>
-          <a :href="`file://${convertedUrl.frameOutputPath}`" target="_blank">
-            {{ `file://${convertedUrl.frameOutputPath}` }}
-          </a>
+        <li><strong>Last Frame URL:</strong>
+          <a :href="convertedUrl.lastFrameUrl" target="_blank">{{ convertedUrl.lastFrameUrl }}</a>
+        </li>
+        <li v-if="convertedUrl.videoUrl"><strong>Video URL:</strong>
+          <a :href="convertedUrl.videoUrl" target="_blank">{{ convertedUrl.videoUrl }}</a>
         </li>
       </ul>
     </div>
   </div>
 </template>
 
-
 <script lang="ts">
-import {defineComponent, reactive, ref} from 'vue';
-import {convertVideo} from '@/services/convert-service'; // API 경로는 실제 사용 환경에 맞게 조정
-import api from '@/services/api'; // 공통 API 파일
+import { defineComponent, reactive, ref } from "vue";
+import { convertVideo } from "@/services/convert-service";
 
 interface ConvertVideoRequest {
   url: string;
-  operation: String;
-  requestId: String;
+  operation: string;
+  requestId: string;
 }
 
 interface ConvertResponse {
-  status: String;
-  requestId: String; // 요청 ID
-  videoOutputPath: String; // 처리 결과 경로
-  frameOutputPath: String; // 처리 결과 경로
+  status: string; // 작업 상태
+  requestId: string; // 요청 ID
+  outputPath: string; // 처리 결과 경로
+  firstFrameUrl: string; // 첫 번째 프레임 URL
+  lastFrameUrl: string; // 마지막 프레임 URL
+  videoUrl: string | null; // 결과 비디오 URL (null 허용)
+  operation: string; // 작업 유형 (split, merge)
+  message: string; // 메시지
 }
 
+function isConvertResponse(response: any): response is ConvertResponse {
+  return (
+    typeof response.status === "string" &&
+    typeof response.requestId === "string" &&
+    typeof response.outputPath === "string" &&
+    typeof response.firstFrameUrl === "string" &&
+    typeof response.lastFrameUrl === "string" &&
+    (typeof response.videoUrl === "string" || response.videoUrl === null) && // 수정
+    typeof response.operation === "string" &&
+    typeof response.message === "string"
+  );
+}
+
+
 export default defineComponent({
-  name: 'Converter',
+  name: "Converter",
   setup() {
     const convertRequest = reactive<ConvertVideoRequest>({
-      url: '',
-      operation: '',
-      requestId: '',
+      url: "",
+      operation: "split",
+      requestId: "",
     });
 
-    const isLoading = ref(false); // 로딩 상태
-    const convertedUrl = ref<ConvertResponse | null>(null); // 응답 데이터 저장
+    const isLoading = ref(false);
+    const convertedUrl = ref<ConvertResponse | null>(null);
 
-
-    const summitConvert = async () => {
-      isLoading.value = true; // 스피너 표시
+    const submitConvert = async () => {
+      convertedUrl.value = null;
+      isLoading.value = true;
       try {
         const response = await convertVideo(convertRequest);
-        convertedUrl.value = response;  // 응답 데이터 저장
-        isLoading.value = false;
-        console.log('Created url:', response);
-        alert('처리가 완료 되었습니다..')
+        console.log("Raw response:", response); // 응답 확인
+        if (isConvertResponse(response)) {
+          convertedUrl.value = response;
+        } else {
+          console.error("Invalid response format:", response);
+          throw new Error("Unexpected response structure");
+        }
+        alert("처리가 완료되었습니다.");
       } catch (error) {
-        isLoading.value = false; // 스피너 숨김
-        console.error('처리 실패' + error);
-        alert('처리에 실패했습니다.')
+        console.error("처리 실패:", error);
+        alert("처리에 실패했습니다.");
+      } finally {
+        isLoading.value = false;
       }
     };
 
+
     return {
       convertRequest,
-      summitConvert,
+      submitConvert,
       isLoading,
       convertedUrl,
-    }
+    };
   },
 });
 </script>
+
 
 <style scoped>
 /* 전체 컨버터 컨테이너 */
