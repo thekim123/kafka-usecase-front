@@ -16,4 +16,7 @@ export default defineConfig({
     },
   },
   define: {global: 'window'},
+  server: {
+    port: 3000, // 원하는 포트 번호를 설정
+  },
 })

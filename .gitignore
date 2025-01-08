@@ -7,13 +7,24 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Node modules
 node_modules
+
+# System files
 .DS_Store
-dist
-dist-ssr
-coverage
+
+# Build outputs
+dist/
+dist-ssr/
+*.js
+*.js.map
+*.css
+*.html
+*.map
+coverage/
 *.local
 
+# Cypress files
 /cypress/videos/
 /cypress/screenshots/
 
@@ -27,4 +38,5 @@ coverage
 *.sln
 *.sw?
 
+# TypeScript build info
 *.tsbuildinfo

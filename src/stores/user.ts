@@ -13,6 +13,9 @@ export const useUserStore = defineStore('user', {
     setUser(user: User) {
       this.user = user;
     },
+    clearUser() {
+      this.user = null;
+    },
   },
   getters: {
     isLoggedIn: (state): boolean => !!state.user,

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="login">
     <h1>Login</h1>
     <form @submit.prevent="handleLogin">
       <input v-model="username" placeholder="Username" />
@@ -11,9 +11,8 @@
 </template>
 
 <script lang="ts">
-import {defineComponent, nextTick, ref} from 'vue';
+import { defineComponent, nextTick, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-
 import api from '../services/api'; // Axios 설정 파일
 import { useAuthStore } from '@/stores/auth'; // Pinia 상태 관리
 
@@ -33,14 +32,20 @@ export default defineComponent({
           username: username.value,
           password: password.value,
         });
-        // 액세스 토큰과 리프레시 토큰 저장
+
+        // 액세스 토큰 저장
         const { access } = response?.data.body || {};
         authStore.setAccessToken(access);
 
         // nextTick을 사용해 상태 업데이트 이후 라우팅
         await nextTick();
-        const redirect = route.query.redirect || '/';
-        router.push(redirect);
+
+        // redirect 처리
+        let redirect = route.query.redirect;
+        if (Array.isArray(redirect)) {
+          redirect = redirect[0]; // 배열이면 첫 번째 값 사용
+        }
+        router.push(redirect && typeof redirect === 'string' ? redirect : '/');
       } catch (error: any) {
         errorMessage.value = error.response?.data?.message || 'Login failed!';
       }
@@ -49,4 +54,17 @@ export default defineComponent({
     return { username, password, errorMessage, handleLogin };
   },
 });
+
 </script>
+
+<style scoped>
+.login {
+  width: 300px;
+  height: 200px;
+  background-color: #00bd7e;
+  padding: 20px;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+</style>
