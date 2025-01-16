@@ -36,7 +36,7 @@
         <li><strong>Last Frame URL:</strong>
           <a :href="convertedUrl.lastFrameUrl" target="_blank">{{ convertedUrl.lastFrameUrl }}</a>
         </li>
-        <li v-if="convertedUrl.videoUrl"><strong>Video URL:</strong>
+        <li v-if="convertedUrl.videoUrl"><strong>VideoResponse URL:</strong>
           <a :href="convertedUrl.videoUrl" target="_blank">{{ convertedUrl.videoUrl }}</a>
         </li>
       </ul>

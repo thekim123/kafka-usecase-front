@@ -17,7 +17,7 @@ interface ConvertResponse {
   message: string; // 결과 메시지
 }
 
-// 영상 변환 요청 및 응답 [url(경로) to Frame(Video)]
+// 영상 변환 요청 및 응답 [url(경로) to Frame(VideoResponse)]
 export const convertVideo = async (request: ConvertVideoRequest): Promise<ConvertResponse> => {
   const response = await api.post<ConvertResponse>('/api/di', request);
   return response.data;

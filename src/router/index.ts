@@ -1,19 +1,23 @@
-import { createRouter, createWebHistory } from 'vue-router';
+import {createRouter, createWebHistory} from 'vue-router';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Join from '../views/Join.vue';
-import { useAuthStore } from '@/stores/auth';
+import {useAuthStore} from '@/stores/auth';
 import api from '@/services/api';
 import Converter from '@/layouts/Converter.vue';
 import BoardList from '@/layouts/BoardList.vue';
-import { AxiosError } from 'axios';
+import {AxiosError} from 'axios';
+import VideoList from "@/layouts/VideoList.vue";
+import VideoDetail from "@/layouts/VIdeoDetail.vue"
 
 const routes = [
-  { path: '/', name: 'Home', component: Home },
-  { path: '/login', name: 'Login', component: Login },
-  { path: '/join', name: 'Join', component: Join },
-  { path: '/board', name: 'Board', component: BoardList },
-  { path: '/convert', name: 'Convert', component: Converter },
+  {path: '/', name: 'Home', component: Home},
+  {path: '/login', name: 'Login', component: Login},
+  {path: '/join', name: 'Join', component: Join},
+  {path: '/board', name: 'Board', component: BoardList},
+  {path: '/convert', name: 'Convert', component: Converter},
+  {path: '/videos', name: 'VideoList', component: VideoList},
+  {path: '/video/:videoId', name: 'VideoDetail', component: VideoDetail}
 ];
 
 const router = createRouter({
@@ -27,7 +31,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (!(to.name === 'Join' || to.name === 'Login') && !authStore.isAuthenticated) {
     try {
-      const response = await api.post('/auth/refresh', {}, { withCredentials: true });
+      const response = await api.post('/auth/refresh', {}, {withCredentials: true});
       const accessToken = response?.data?.access || {};
 
       if (accessToken) {
@@ -42,7 +46,7 @@ router.beforeEach(async (to, from, next) => {
       } else {
         console.error('❌ 예상치 못한 오류:', error);
       }
-      next({ name: 'Login' });
+      next({name: 'Login'});
     }
   } else {
     next();

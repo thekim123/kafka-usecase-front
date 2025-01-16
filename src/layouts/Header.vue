@@ -5,6 +5,7 @@
         <router-link :to="{ name: 'Home' }">Home</router-link>
         <router-link :to="{ name: 'Board' }">Board</router-link>
         <router-link :to="{ name: 'Convert' }">Converter</router-link>
+        <router-link :to="{ name: 'VideoList' }">VideoList</router-link>
       </div>
       <div class="btn">
         <router-link class="login-btn" v-if="!auth.isAuthenticated" :to="{ name: 'Login' }">Login</router-link>
@@ -16,7 +17,7 @@
 
 <script lang="ts">
 import {defineComponent} from 'vue';
-import {useAuthStore} from '../stores/auth';
+import {useAuthStore} from '@/stores/auth';
 import { useRouter } from "vue-router";
 
 export default defineComponent({
