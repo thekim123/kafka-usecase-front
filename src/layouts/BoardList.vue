@@ -65,8 +65,6 @@
   </div>
 </template>
 
----
-
 <script lang="ts">
 import { defineComponent, reactive, ref } from 'vue';
 import { postBoard, getBoard } from '@/services/board-service'; // API 경로는 실제 사용 환경에 맞게 조정

@@ -14,7 +14,8 @@
 import { defineComponent, nextTick, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import api from '../services/api'; // Axios 설정 파일
-import { useAuthStore } from '@/stores/auth'; // Pinia 상태 관리
+import { useAuthStore } from '@/stores/auth';
+import {useStompStore} from "@/stores/stomp"; // Pinia 상태 관리
 
 export default defineComponent({
   name: 'Login',
@@ -36,6 +37,10 @@ export default defineComponent({
         // 액세스 토큰 저장
         const { access } = response?.data.body || {};
         authStore.setAccessToken(access);
+
+        const stompStore = useStompStore();
+        const socketUrl = "http://localhost:8080/ws"
+        stompStore.createClient(username.value, socketUrl);
 
         // nextTick을 사용해 상태 업데이트 이후 라우팅
         await nextTick();
