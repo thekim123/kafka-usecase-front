@@ -2,7 +2,7 @@ import {createRouter, createWebHistory} from 'vue-router';
 import Home from '../views/Home.vue';
 import Login from '../views/Login.vue';
 import Join from '../views/Join.vue';
-import {useAuthStore} from '@/stores/auth';
+import {useAuthStore} from '@/stores/auth-store';
 import api from '@/services/api';
 import Converter from '@/layouts/Converter.vue';
 import BoardList from '@/layouts/BoardList.vue';

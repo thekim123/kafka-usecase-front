@@ -2,20 +2,26 @@
   <div class="login">
     <h1>Login</h1>
     <form @submit.prevent="handleLogin">
-      <input v-model="username" placeholder="Username" />
-      <input v-model="password" type="password" placeholder="Password" />
-      <button type="submit">Login</button>
+      <input v-model="username" placeholder="Username"/>
+      <input v-model="password" type="password" placeholder="Password"/>
+      <span style="display: flex; flex-direction: row">
+        <button type="submit">Login</button>
+        <router-link :to="'/join'">
+          <button type="button">Join</button>
+        </router-link>
+      </span>
     </form>
+
     <p v-if="errorMessage" style="color: red">{{ errorMessage }}</p>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, nextTick, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import {defineComponent, nextTick, ref} from 'vue';
+import {useRoute, useRouter} from 'vue-router';
 import api from '../services/api'; // Axios 설정 파일
-import { useAuthStore } from '@/stores/auth';
-import {useStompStore} from "@/stores/stomp"; // Pinia 상태 관리
+import {useAuthStore} from '@/stores/auth-store';
+import {useStompStore} from "@/stores/stomp-store"; // Pinia 상태 관리
 
 export default defineComponent({
   name: 'Login',
@@ -35,7 +41,7 @@ export default defineComponent({
         });
 
         // 액세스 토큰 저장
-        const { access } = response?.data.body || {};
+        const {access} = response?.data.body || {};
         authStore.setAccessToken(access);
 
         const stompStore = useStompStore();
@@ -56,7 +62,7 @@ export default defineComponent({
       }
     };
 
-    return { username, password, errorMessage, handleLogin };
+    return {username, password, errorMessage, handleLogin};
   },
 });
 
@@ -65,7 +71,7 @@ export default defineComponent({
 <style scoped>
 .login {
   width: 300px;
-  height: 200px;
+  height: 300px;
   background-color: #00bd7e;
   padding: 20px;
   color: white;

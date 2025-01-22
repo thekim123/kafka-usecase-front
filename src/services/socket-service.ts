@@ -9,6 +9,8 @@ export interface StompServiceInterface {
   subscribe(destination: string, callback: (message: any) => void): void;
 
   send(destination: string, body: any, headers?: Record<string, string>): void;
+
+  reconnect(): void;
 }
 
 export default class StompService implements StompServiceInterface {
@@ -52,5 +54,20 @@ export default class StompService implements StompServiceInterface {
       headers,
     });
   }
+
+  reconnect() {
+    this.client.onWebSocketClose(() => {
+      console.error("WebSocket connection closed. Reconnecting...");
+      this.reconnectStompClient();
+    });
+  }
+
+  reconnectStompClient = () => {
+    this.client.deactivate(); // 기존 클라이언트 비활성화
+    setTimeout(() => {
+      this.client.activate(); // 재활성화
+    }, 1000); // 1초 후 재연결 시도
+  };
+
 
 }

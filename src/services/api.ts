@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {useAuthStore} from '@/stores/auth';
+import {useAuthStore} from '@/stores/auth-store';
 
 const baseURL = 'http://localhost:8080';
 const tokenPrefix = 'Bearer ';
