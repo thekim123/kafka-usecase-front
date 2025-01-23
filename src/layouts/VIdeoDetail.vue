@@ -1,16 +1,16 @@
 <script lang="ts">
-import {computed, defineComponent, onMounted, onUnmounted} from "vue";
+import {defineComponent, onMounted} from "vue";
 import {useRoute} from "vue-router";
 import {useStompStore} from "@/stores/stomp-store";
 import {Deque} from '@/types/deque'
 import {Frame, FrameImpl} from "@/types/frame";
 import {throttle} from "lodash";
-import {Video} from "@/types/video";
-import {useVideoStore} from "@/stores/video-store";
 import {VideoService} from "@/services/video-service";
+import VideoTimeline from "@/components/VideoTimeline.vue"
 
 export default defineComponent({
   name: "VideoDetail",
+  components: {VideoTimeline},
   data() {
     return {
       startSequence: 0,
@@ -20,7 +20,7 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const videoId = route.params.videoId;
-    const video = VideoService.fetchVideoDetail(videoId[0]);
+    const video = VideoService.fetchVideoDetail(videoId);
 
     const stompStore = useStompStore();
     const stompClient = stompStore.getClient();
@@ -156,6 +156,7 @@ export default defineComponent({
         &#9654;
       </button>
     </div>
+    <VideoTimeline :videoId="videoId"/>
   </div>
 
 </template>

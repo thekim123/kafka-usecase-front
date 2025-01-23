@@ -6,6 +6,11 @@ import {PageUtil} from "@/util/page-util";
 import {VideoService} from "@/services/video-service";
 
 export const useVideoStore = defineStore('video', () => {
+  const currentVideoId = ref<string | null>(null);
+  const timelineThumbnails = ref([]);
+  const currentTime = ref(0);
+  const duration = ref(0);
+
   const videoList = ref<Video>([]);
   const page: Page = PageUtil.createDefaultPage();
 
@@ -18,16 +23,32 @@ export const useVideoStore = defineStore('video', () => {
     }
   };
 
+  const setDuration = (videoDuration: number) => {
+    duration.value = videoDuration;
+  };
+
+  const setTimeline = (videoId: string, thumbnails: any[]) => {
+    currentVideoId.value = videoId;
+    timelineThumbnails.value = thumbnails;
+  };
+
+  const updateCurrentTime = (time: number) => {
+    currentTime.value = time;
+  };
+
   const getVideoById = (videoId: string) => {
-    const video = videoList.value.find((video) => video.videoId === videoId) || null;
-    console.log('video: ' + JSON.stringify(video.videoId));
-    return videoList.value.find((video) => video.videoId === videoId) || null;
+    return videoList.value.find((video: Video) => video.videoId === videoId) || null;
   };
 
   return {
     videoList,
     loadVideos,
     getVideoById,
+    currentTime,
+    currentVideoId,
+    setTimeline,
+    updateCurrentTime,
+    setDuration,
   }
 
 });

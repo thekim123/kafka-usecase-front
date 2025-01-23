@@ -1,0 +1,23 @@
+@startuml
+rectangle Client {
+  component "VideoPlayer" {
+    [HTMLVideoElement] as Video
+    [CanvasOverlay]
+    [Timeline]
+  }
+  component "UserInteraction" {
+    [MouseEvents]
+    [KeyboardEvents]
+  }
+}
+
+rectangle Server {
+  [MetadataStorage]
+  [MosaicProcessor]
+}
+
+Client -down-> Server: Send/Receive Data
+Video <--> Timeline: Sync Video Position
+Video <--> CanvasOverlay: Display Mosaic
+CanvasOverlay <--> UserInteraction: Draw Mosaic
+@enduml

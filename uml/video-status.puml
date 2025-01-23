@@ -1,0 +1,10 @@
+@startuml
+[*] --> Idle
+Idle --> Playing : Play button clicked
+Playing --> Paused : Pause button clicked
+Playing --> Editing : Enter Mosaic Mode
+Editing --> Saving : Save Mosaic Data
+Saving --> Playing : Save Complete
+Paused --> Playing : Resume button clicked
+[*] --> Error : Unexpected issue
+@enduml

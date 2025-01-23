@@ -1,0 +1,17 @@
+@startuml
+start
+:비디오 재생;
+if (타임라인 이동?) then (Yes)
+  :비디오 재생 위치 변경;
+else (No)
+endif
+:모자이크 적용 모드 진입;
+:Canvas로 현재 프레임에 좌표 표시;
+if (사용자가 얼굴 클릭?) then (Yes)
+  :해당 좌표를 Canvas에 모자이크로 표시;
+else (No)
+endif
+:모자이크 좌표 데이터 저장;
+:변경 사항 서버로 전송;
+stop
+@enduml

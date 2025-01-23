@@ -4,7 +4,10 @@
       <h2>새로운 작업 등록</h2>
       <section class="modal-input-form">
         <input id="video-title" v-model="workTitle" placeholder="작업 이름">
-        <input id="video-file" v-on:change="changeVideo" placeholder="작업 이름" type="file">
+        <input id="video-file" v-on:change="changeVideo" type="file">
+        <div v-if="videoSrc" class="video-container">
+          <video ref="videoPlayer" controls :src="videoSrc"></video>
+        </div>
       </section>
       <section>
         <button @click="registerVideo">등록</button>
@@ -24,6 +27,7 @@ export default {
     return {
       workTitle: "", // 제목을 저장할 변수
       videoFile: null, // 파일을 저장할 변수
+      videoSrc: null,
     };
   },
   setup() {
@@ -35,7 +39,7 @@ export default {
     },
     async registerVideo() {
       try {
-        const request: VideoRegisterRequest = {workTitle: this.workTitle, file: this.videoFile};
+        const request: VideoRegisterRequest = {workTitle: this.workTitle, file: this.videoFile, };
         await VideoService.registerVideo(request);
         this.closeModal();
         this.$emit("video-registered"); // 부모로 이벤트 전달
@@ -47,6 +51,7 @@ export default {
     changeVideo(event) {
       // 파일 선택 시 파일 정보 저장
       this.videoFile = event.target.files[0];
+      this.videoSrc = URL.createObjectURL(this.videoFile);
       console.log("Selected File:", this.videoFile);
     },
   },
@@ -74,6 +79,26 @@ export default {
   border-radius: 8px;
   text-align: center;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  max-width: 90%; /* 화면 크기에 따라 동적으로 조정 */
+  max-height: 90%; /* 최대 높이 설정 */
+  overflow: auto; /* 내부 스크롤 추가 */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.video-container {
+  max-width: 100%; /* 부모 요소 크기에 따라 조정 */
+  max-height: auto; /* 모달 높이에 맞춤 */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden; /* 넘치는 내용 숨김 */
+}
+
+video {
+  max-width: 100%; /* 비디오가 모달 크기를 넘지 않도록 제한 */
+  height: auto; /* 비율 유지 */
 }
 
 button {
