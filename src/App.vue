@@ -10,7 +10,14 @@
 
     <!-- 레이아웃 구조 -->
     <div class="layout">
-      <router-view />
+      <Suspense>
+        <template #default>
+          <router-view />
+        </template>
+        <template #fallback>
+          <div>Loading...</div>
+        </template>
+      </Suspense>
     </div>
   </div>
 </template>

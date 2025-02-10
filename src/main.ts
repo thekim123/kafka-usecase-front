@@ -10,7 +10,6 @@ import router from './router';
 import { library } from '@fortawesome/fontawesome-svg-core';
 import { faUserFriends, faCommentDots } from '@fortawesome/free-solid-svg-icons'; // 필요한 아이콘만 가져오기
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome';
-import StompService from "@/services/socket-service";
 
 
 // 아이콘 추가

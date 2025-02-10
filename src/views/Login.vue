@@ -44,10 +44,6 @@ export default defineComponent({
         const {access} = response?.data.body || {};
         authStore.setAccessToken(access);
 
-        const stompStore = useStompStore();
-        const socketUrl = "http://localhost:8080/ws"
-        stompStore.createClient(username.value, socketUrl);
-
         // nextTick을 사용해 상태 업데이트 이후 라우팅
         await nextTick();
 

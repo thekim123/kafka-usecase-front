@@ -14,9 +14,9 @@ export const useVideoStore = defineStore('video', () => {
   const videoList = ref<Video>([]);
   const page: Page = PageUtil.createDefaultPage();
 
-  const loadVideos = async () => {
+  const loadVideos = async (p:Page) => {
     try {
-      const list = await VideoService.fetchVideoList(page);
+      const list = await VideoService.fetchVideoList(p);
       videoList.value = list.content;
     } catch (error) {
       console.error('Failed to fetch video list', error);

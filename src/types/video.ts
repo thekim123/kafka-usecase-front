@@ -8,6 +8,7 @@ export interface Video {
   videoFileId: number;
   ownerId: number;
   workTitle: string;
+  videoStatus: string;
 }
 
 export interface VideoResponse {
@@ -31,8 +32,16 @@ export interface VideoDetail {
   videoId: string;
   videoTitle: string;
   workTitle: string;
+  fps: number;
+  duration: number;
+  totalFrameCount: number;
   owner: User;
   frameInfo: OriginalFrame;
   videoInfo: AttachFile;
+}
+
+export interface TimelineMetadata {
+  sequence: number;
+  object_name: string;
 }
 

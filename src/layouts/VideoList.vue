@@ -1,12 +1,12 @@
 <script lang="ts">
 import {defineComponent, onMounted, ref} from "vue";
-import {VideoService} from "@/services/video-service";
 import {PageUtil} from "@/util/page-util";
 import {Video} from "@/types/video";
 import {Page} from "@/types/page";
 import VideoDetail from "@/layouts/VIdeoDetail.vue"
 import VideoRegisterModal from "@/components/VideoRegisterModal.vue";
 import {useVideoStore} from "@/stores/video-store";
+import router from "@/router";
 
 export default defineComponent({
   name: "VideoList",
@@ -17,6 +17,7 @@ export default defineComponent({
     };
   },
   setup() {
+    console.log('video list console log');
     const videoStore = useVideoStore();
     // const videoList = ref<Video[]>([]);
     const {videoList, loadVideos} = videoStore;
@@ -30,12 +31,20 @@ export default defineComponent({
       selectedVideo.value = video; // 선택된 비디오 설정
     };
 
+    const validateVideoStatus = (video: Video) => {
+      if (video.videoStatus === "REGISTERED") {
+        alert("아직 작업에 필요한 작업을 하는중이에요.")
+      } else {
+        router.push(`/video/${video.videoId}`);
+      }
+    }
+
     // 컴포넌트가 마운트 되었을 때 데이터 로드
     onMounted(() => {
       loadVideos(page);
     });
 
-    return {videoList, selectedVideo, selectVideo, loadVideos};
+    return {videoList, selectedVideo, selectVideo, loadVideos, validateVideoStatus};
   },
   methods: {
     openModal() {
@@ -61,10 +70,10 @@ export default defineComponent({
     </section>
     <ul>
       <li v-for="item in videoList" :key="item.videoId">
-        <router-link :to="`/video/${item.videoId}`">
+        <a @click.prevent="validateVideoStatus(item)">
           <p><strong>작업명:</strong> {{ item.workTitle }}</p>
           <p><strong>비디오 파일명:</strong> {{ item.videoTitle }}</p>
-        </router-link>
+        </a>
         <hr/>
       </li>
     </ul>

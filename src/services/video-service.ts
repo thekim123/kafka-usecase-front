@@ -1,7 +1,8 @@
 import api from '@/services/api'
 import {Page} from '@/types/page'
-import {VideoDetail, VideoRegisterRequest, VideoRegisterResponse, VideoResponse} from "@/types/video";
+import {TimelineMetadata, VideoDetail, VideoRegisterRequest, VideoRegisterResponse, VideoResponse} from "@/types/video";
 import {PageUtil} from '@/util/page-util'
+import axios from "axios";
 
 export const VideoService = {
   async fetchVideoList(page: Page): Promise<VideoResponse> {
@@ -13,7 +14,6 @@ export const VideoService = {
   async fetchVideoDetail(videoId: string): Promise<VideoDetail> {
     const url = '/api/video/detail/' + videoId;
     const response = await api.get<VideoDetail>(url);
-    console.log(response);
     return response.data;
   },
 
@@ -28,7 +28,14 @@ export const VideoService = {
       },
     };
     const response = await api.post<VideoRegisterRequest>(url, formData, headers);
-    console.log(response);
+    return response.data;
+  },
+
+
+  async fetchTimelineMetadata(videoId: string):Promise<TimelineMetadata[]> {
+    const bucketUrl = `http://localhost:9000/di-bucket`;
+    const url = bucketUrl + `/${videoId}/timeline/timeline.json`;
+    const response = await axios.get<TimelineMetadata[]>(url);
     return response.data;
   },
 
