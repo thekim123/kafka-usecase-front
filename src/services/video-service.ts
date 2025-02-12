@@ -3,6 +3,8 @@ import {Page} from '@/types/page'
 import {TimelineMetadata, VideoDetail, VideoRegisterRequest, VideoRegisterResponse, VideoResponse} from "@/types/video";
 import {PageUtil} from '@/util/page-util'
 import axios from "axios";
+import {PythonRectData, Rect} from "@/types/rect";
+import {convertMosaicsToPythonFormat, transformSequenceData} from "@/util/transform-sequence-data";
 
 export const VideoService = {
   async fetchVideoList(page: Page): Promise<VideoResponse> {
@@ -32,11 +34,23 @@ export const VideoService = {
   },
 
 
-  async fetchTimelineMetadata(videoId: string):Promise<TimelineMetadata[]> {
+  async fetchTimelineMetadata(videoId: string): Promise<TimelineMetadata[]> {
     const bucketUrl = `http://localhost:9000/di-bucket`;
     const url = bucketUrl + `/${videoId}/timeline/timeline.json`;
     const response = await axios.get<TimelineMetadata[]>(url);
     return response.data;
   },
+
+  async fetchPythonRects(videoId: string) {
+    const response = await axios.get<PythonRectData>('/src/assets/edited_metadata.json');
+    return response;
+  },
+
+  async saveAllMosaics(mosaic: Record<number, Rect[]>, totalFrames: number, fps: number){
+    console.log(`mosaics: ${mosaic}, totalFrames: ${totalFrames}, fps: ${fps}`);
+    const payload: PythonRectData = convertMosaicsToPythonFormat(mosaic, totalFrames, fps);
+    console.log(payload);
+    // const response = await axios.post('sdifsdf', payload);
+  }
 
 }

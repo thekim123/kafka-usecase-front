@@ -5,16 +5,17 @@ import {Page} from "@/types/page";
 import {PageUtil} from "@/util/page-util";
 import {VideoService} from "@/services/video-service";
 
-export const useVideoStore = defineStore('video', () => {
+export const useVideoStore
+  = defineStore('video', () => {
   const currentVideoId = ref<string | null>(null);
-  const timelineThumbnails = ref([]);
+  const timelineThumbnails = ref<any[]>([]);
   const currentTime = ref(0);
   const duration = ref(0);
 
-  const videoList = ref<Video>([]);
+  const videoList = ref<Video[]>([]);
   const page: Page = PageUtil.createDefaultPage();
 
-  const loadVideos = async (p:Page) => {
+  const loadVideos = async (p: Page) => {
     try {
       const list = await VideoService.fetchVideoList(p);
       videoList.value = list.content;
@@ -37,7 +38,9 @@ export const useVideoStore = defineStore('video', () => {
   };
 
   const getVideoById = (videoId: string) => {
-    return videoList.value.find((video: Video) => video.videoId === videoId) || null;
+    if (Array.isArray(videoList.value)) {
+      return (videoList.value).find((video: Video) => video.videoId === videoId) || null;
+    }
   };
 
   return {

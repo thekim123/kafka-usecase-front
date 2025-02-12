@@ -10,8 +10,12 @@ export default defineConfig({
     vue(),
     vueDevTools(),
   ],
+  build:{
+    sourcemap: true,
+  },
   resolve: {
     alias: {
+      // TODO: .env 버그 있음
       '@': fileURLToPath(new URL('./src', import.meta.url))
     },
   },

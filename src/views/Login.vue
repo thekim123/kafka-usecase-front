@@ -21,7 +21,6 @@ import {defineComponent, nextTick, ref} from 'vue';
 import {useRoute, useRouter} from 'vue-router';
 import api from '../services/api'; // Axios 설정 파일
 import {useAuthStore} from '@/stores/auth-store';
-import {useStompStore} from "@/stores/stomp-store"; // Pinia 상태 관리
 
 export default defineComponent({
   name: 'Login',

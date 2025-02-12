@@ -26,8 +26,8 @@ export default {
   data() {
     return {
       workTitle: "", // 제목을 저장할 변수
-      videoFile: null, // 파일을 저장할 변수
-      videoSrc: null,
+      videoFile: null as File | null, // 파일을 저장할 변수
+      videoSrc: '',
     };
   },
   setup() {
@@ -38,8 +38,13 @@ export default {
       this.$emit("close"); // 부모 컴포넌트에 이벤트 전달
     },
     async registerVideo() {
+      if(!this.videoFile){
+        alert('비디오 파일을 등록해주세요.');
+        return;
+      }
+
       try {
-        const request: VideoRegisterRequest = {workTitle: this.workTitle, file: this.videoFile, };
+        const request: VideoRegisterRequest = {workTitle: this.workTitle, file: this.videoFile,};
         await VideoService.registerVideo(request);
         this.closeModal();
         this.$emit("video-registered"); // 부모로 이벤트 전달
@@ -48,12 +53,23 @@ export default {
         alert("Failed to register video.");
       }
     },
-    changeVideo(event) {
-      // 파일 선택 시 파일 정보 저장
-      this.videoFile = event.target.files[0];
-      this.videoSrc = URL.createObjectURL(this.videoFile);
+    changeVideo(event: Event) {
+      const inputElement = event.target as HTMLInputElement;
+
+      if (!inputElement.files || inputElement.files.length === 0) {
+        console.error("No file selected.");
+        return;
+      }
+
+      const selectedFile = inputElement.files[0];
+
+      if (selectedFile) {
+        this.videoFile = selectedFile; // ✅ 정상적인 File 객체만 저장
+        this.videoSrc = URL.createObjectURL(this.videoFile);
+      }
+
       console.log("Selected File:", this.videoFile);
-    },
+    }
   },
 };
 </script>
