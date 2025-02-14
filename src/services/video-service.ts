@@ -35,8 +35,7 @@ export const VideoService = {
 
 
   async fetchTimelineMetadata(videoId: string): Promise<TimelineMetadata[]> {
-    const bucketUrl = `http://localhost:9000/di-bucket`;
-    const url = bucketUrl + `/${videoId}/timeline/timeline.json`;
+    const url = import.meta.env.VITE_STORAGE + `/${videoId}/timeline/timeline.json`;
     const response = await axios.get<TimelineMetadata[]>(url);
     return response.data;
   },

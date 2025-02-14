@@ -43,3 +43,23 @@ npm run lint
 ```
 
 
+### docker nginx 명령어
+```shell
+docker run -d --name mosaic-service-nginx -p 80:80 -v C:\mosaic-nginx-html:/usr/share/nginx/html:ro -v C:\Users\Joe\Desktop\di-deploy\dist/default.conf:/etc/nginx/conf.d/mosaic-service.conf:ro nginx
+```
+
+- `nginx` conf 파일
+```nginx configuration
+server {
+    listen       80;
+    listen  [::]:80;
+    server_name  localhost;
+
+    root /usr/share/nginx/html;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
+```

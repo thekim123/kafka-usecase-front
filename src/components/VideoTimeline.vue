@@ -26,7 +26,7 @@ export default defineComponent({
     },
     baseUrl: {
       type: String,
-      default: 'http://localhost:9000/di-bucket',
+      default: import.meta.env.VITE_STORAGE,
     },
   },
   emits: ['frameSelected'],

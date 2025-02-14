@@ -1,10 +1,9 @@
 import axios from 'axios';
 import {useAuthStore} from '@/stores/auth-store';
+import * as process from "node:process";
 
-const baseURL = 'http://localhost:8080';
-const tokenPrefix = 'Bearer ';
 const api = axios.create({
-  baseURL: 'http://localhost:8080', // 백엔드 URL
+  baseURL: import.meta.env.VITE_API_SERVER, // 백엔드 URL
   withCredentials: true,
 });
 
@@ -30,7 +29,7 @@ api.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const response
-          = await axios.post(`${baseURL}/auth/refresh`, {}, {withCredentials: true});
+          = await axios.post(`${import.meta.env.VITE_API_SERVER}/auth/refresh`, {}, {withCredentials: true});
         const newAccessToken = response.data.accessToken;
         const authStore = useAuthStore();
 
