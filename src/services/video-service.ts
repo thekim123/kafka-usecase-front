@@ -3,7 +3,7 @@ import {Page} from '@/types/page'
 import {TimelineMetadata, VideoDetail, VideoRegisterRequest, VideoRegisterResponse, VideoResponse} from "@/types/video";
 import {PageUtil} from '@/util/page-util'
 import axios from "axios";
-import {PythonRectData, Rect} from "@/types/rect";
+import {PythonRectData, Rect, SequenceItem} from "@/types/rect";
 import {convertMosaicsToPythonFormat, transformSequenceData} from "@/util/transform-sequence-data";
 
 export const VideoService = {
@@ -41,15 +41,15 @@ export const VideoService = {
   },
 
   async fetchPythonRects(videoId: string) {
-    const response = await axios.get<PythonRectData>('/src/assets/edited_metadata.json');
+    const response = await axios.get<PythonRectData>(import.meta.env.VITE_STORAGE + `/${videoId}/metadata.json`);
     return response;
   },
 
-  async saveAllMosaics(mosaic: Record<number, Rect[]>, totalFrames: number, fps: number){
+  async saveAllMosaics(videoId: string, mosaic: Record<number, Rect[]>, totalFrames: number, fps: number) {
     console.log(`mosaics: ${mosaic}, totalFrames: ${totalFrames}, fps: ${fps}`);
-    const payload: PythonRectData = convertMosaicsToPythonFormat(mosaic, totalFrames, fps);
+    const payload: SequenceItem[] = convertMosaicsToPythonFormat(mosaic);
     console.log(payload);
-    // const response = await axios.post('sdifsdf', payload);
+    await api.post(`/api/video/finalize/${videoId}`, payload);
   }
 
 }

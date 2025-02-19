@@ -40,3 +40,7 @@ coverage/
 
 # TypeScript build info
 *.tsbuildinfo
+
+
+# 환경변수
+.env

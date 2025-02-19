@@ -85,7 +85,7 @@ export default defineComponent({
       }
 
 
-      await mosaicStore.loadRects();
+      await mosaicStore.loadRects(videoId);
       console.log(currentFrameSequence.value);
       await changeFrame(currentFrameSequence.value);
       const mosaics = mosaicStore.getMosaics(currentFrameSequence.value);
@@ -119,7 +119,7 @@ export default defineComponent({
     }
 
     const onEditingComplete = async () => {
-      await mosaicStore.saveAllMosaics();
+      await mosaicStore.saveAllMosaics(videoId);
     }
 
     return {

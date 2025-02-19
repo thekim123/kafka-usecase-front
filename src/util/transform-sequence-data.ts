@@ -17,9 +17,7 @@ export function transformSequenceData(data: PythonRectData): Array<{ frameSequen
 
 export function convertMosaicsToPythonFormat(
   mosaics: Record<number, Rect[]>,
-  totalFrames: number,
-  fps: number,
-): PythonRectData {
+): SequenceItem[] {
   const sequence: SequenceItem[] = Object.keys(mosaics).map(frameKey => {
     const frameSeq = Number(frameKey);
     const person: PersonRect[] = mosaics[frameSeq].map(rect => ({
@@ -30,9 +28,6 @@ export function convertMosaicsToPythonFormat(
     }));
     return {seq: frameSeq, person};
   });
-  return {
-    sequence,
-    total_frames: totalFrames,
-    fps,
-  }
+  return sequence;
+
 }

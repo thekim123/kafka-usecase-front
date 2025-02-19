@@ -10,9 +10,9 @@ export const useMosaicStore = defineStore('mosaicStore', {
     fps: 0,
   }),
   actions: {
-    async loadRects() {
+    async loadRects(videoId: string) {
       const fetchedRects
-        = await VideoService.fetchPythonRects('asdfg');
+        = await VideoService.fetchPythonRects(videoId);
 
       this.total_frames = fetchedRects.data.total_frames;
       this.fps = fetchedRects.data.fps;
@@ -44,9 +44,9 @@ export const useMosaicStore = defineStore('mosaicStore', {
     removeAllMosaics(frameSequence: number) {
       delete this.mosaics[frameSequence];
     },
-    async saveAllMosaics() {
+    async saveAllMosaics(videoId: string) {
       try {
-        await VideoService.saveAllMosaics(this.mosaics, this.total_frames, this.fps);
+        await VideoService.saveAllMosaics(videoId, this.mosaics, this.total_frames, this.fps);
       } catch (e) {
         console.log(`save all mosaics is failed: ${e}`);
       }
