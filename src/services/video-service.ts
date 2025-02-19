@@ -24,6 +24,12 @@ export const VideoService = {
     const formData = new FormData();
     formData.append("workTitle", request.workTitle);
     formData.append("file", request.file);
+
+    // 여러 이미지 파일 추가
+    request.images.forEach((image, index) => {
+      formData.append("images", image);
+    });
+
     const headers = {
       headers: {
         "Content-Type": "multipart/form-data", // 멀티파트 요청 설정

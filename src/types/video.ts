@@ -22,6 +22,7 @@ export interface VideoResponse {
 export interface VideoRegisterRequest {
   workTitle: string;
   file: File;
+  images: File[];
 }
 
 export interface VideoRegisterResponse {

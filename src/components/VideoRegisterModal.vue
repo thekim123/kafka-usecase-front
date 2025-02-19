@@ -5,9 +5,16 @@
       <section class="modal-input-form">
         <input id="video-title" v-model="workTitle" placeholder="작업 이름">
         <input id="video-file" v-on:change="changeVideo" type="file">
+        <input id="image-files" v-on:change="changeImage" type="file" multiple>
+
         <div v-if="videoSrc" class="video-container">
           <video ref="videoPlayer" controls :src="videoSrc"></video>
         </div>
+
+        <div class="image-preview-container">
+          <img v-for="(imageSrc, index) in imagePreviews" :key="index" :src="imageSrc" class="preview-image">
+        </div>
+
       </section>
       <section>
         <button @click="registerVideo">등록</button>
@@ -27,6 +34,8 @@ export default {
     return {
       workTitle: "", // 제목을 저장할 변수
       videoFile: null as File | null, // 파일을 저장할 변수
+      targetImage: [] as File[], // 비식별 대상 이미지들을 저장할 배열
+      imagePreviews: [] as string[], // 이미지 미리보기 배열
       videoSrc: '',
     };
   },
@@ -37,14 +46,24 @@ export default {
     closeModal() {
       this.$emit("close"); // 부모 컴포넌트에 이벤트 전달
     },
-    async registerVideo() {
-      if(!this.videoFile){
+    registerVideo: async function () {
+      if (!this.videoFile) {
         alert('비디오 파일을 등록해주세요.');
         return;
       }
 
+      // if (this.targetImages.length === 0) {
+      //   alert("최소 한 장 이상의 이미지를 등록해주세요.");
+      //   return;
+      // }
+
       try {
-        const request: VideoRegisterRequest = {workTitle: this.workTitle, file: this.videoFile,};
+        const request: VideoRegisterRequest = {
+          workTitle: this.workTitle,
+          file: this.videoFile,
+          images: this.targetImage,
+        };
+
         await VideoService.registerVideo(request);
         this.closeModal();
         this.$emit("video-registered"); // 부모로 이벤트 전달
@@ -69,6 +88,22 @@ export default {
       }
 
       console.log("Selected File:", this.videoFile);
+    },
+    changeImage(event: Event) {
+      const inputElement = event.target as HTMLInputElement;
+
+      if (!inputElement.files || inputElement.files.length === 0) {
+        console.error("No files selected.");
+        return;
+      }
+
+      // FileList를 배열로 변환
+      this.targetImage = Array.from(inputElement.files);
+
+      // 이미지 미리보기 생성
+      this.imagePreviews = this.targetImage.map(file => URL.createObjectURL(file));
+
+      console.log("Selected Images:", this.targetImage);
     }
   },
 };
