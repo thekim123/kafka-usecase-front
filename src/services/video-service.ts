@@ -1,6 +1,7 @@
 import api from '@/services/api'
 import {Page} from '@/types/page'
 import {TimelineMetadata, VideoDetail, VideoRegisterRequest, VideoRegisterResponse, VideoResponse} from "@/types/video";
+import {AttachFile} from "@/types/attach-file";
 import {PageUtil} from '@/util/page-util'
 import axios from "axios";
 import {PythonRectData, Rect, SequenceItem} from "@/types/rect";
@@ -56,6 +57,12 @@ export const VideoService = {
     const payload: SequenceItem[] = convertMosaicsToPythonFormat(mosaic);
     console.log(payload);
     await api.post(`/api/video/finalize/${videoId}`, payload);
-  }
+  },
+
+  async fetchFinalVideo(videoId: string): Promise<AttachFile> {
+    const url = '/api/video/final/' + videoId;
+    const response = await api.get<AttachFile>(url);
+    return response.data;
+  },
 
 }

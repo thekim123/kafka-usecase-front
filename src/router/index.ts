@@ -9,6 +9,7 @@ import BoardList from '@/layouts/BoardList.vue';
 import {AxiosError} from 'axios';
 import VideoList from "@/layouts/VideoList.vue";
 import VideoDetail from "@/layouts/VIdeoDetail.vue"
+import videoDwonload from "@/layouts/VideoDwonload.vue";
 
 const routes = [
   {path: '/', name: 'Home', component: Home},
@@ -17,7 +18,8 @@ const routes = [
   {path: '/board', name: 'Board', component: BoardList},
   {path: '/convert', name: 'Convert', component: Converter},
   {path: '/videos', name: 'VideoList', component: VideoList},
-  {path: '/video/:videoId', name: 'VideoDetail', component: VideoDetail}
+  {path: '/video/:videoId', name: 'VideoDetail', component: VideoDetail},
+  {path: '/final/:videoId', name: 'VideoDownload', component: videoDwonload}
 ];
 
 const router = createRouter({

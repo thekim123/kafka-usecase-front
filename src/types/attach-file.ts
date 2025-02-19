@@ -7,3 +7,4 @@ export interface AttachFile {
   createdAt: Date;
   updatedAt: Date;
 }
+

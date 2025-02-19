@@ -34,9 +34,13 @@ export default defineComponent({
     const validateVideoStatus = (video: Video) => {
       if (video.videoStatus === "REGISTERED") {
         alert("아직 작업에 필요한 작업을 하는중이에요.")
+      } else if (video.videoStatus === "COMPLETE") {
+        router.push(`/final/${video.videoId}`);
       } else {
         router.push(`/video/${video.videoId}`);
       }
+
+
     }
 
     // 컴포넌트가 마운트 되었을 때 데이터 로드
@@ -71,9 +75,20 @@ export default defineComponent({
     <ul>
       <li v-for="item in videoList" :key="item.videoId">
         <a @click.prevent="validateVideoStatus(item)">
-          <p><strong>작업명:</strong> {{ item.workTitle }}</p>
-          <p><strong>비디오 파일명:</strong> {{ item.videoTitle }}</p>
+          <p :class="{
+            'complete-video': item.videoStatus === 'COMPLETE',
+            'registered-video': item.videoStatus === 'REGISTERED'
+            }">
+            <strong>작업명:</strong> {{ item.workTitle }}
+          </p>
+          <p :class="{
+            'complete-video': item.videoStatus === 'COMPLETE',
+            'registered-video': item.videoStatus === 'REGISTERED'
+           }">
+            <strong>비디오 파일명:</strong> {{ item.videoTitle }}
+          </p>
         </a>
+
         <hr/>
       </li>
     </ul>
@@ -101,5 +116,17 @@ export default defineComponent({
   display: flex;
   flex-direction: row;
   justify-content: space-between;
+}
+
+p {
+  font-weight: 800;
+}
+
+.complete-video {
+  color: mediumpurple; /* 연한 초록색 */
+}
+
+.registered-video {
+  color: deeppink; /* 연한 초록색 */
 }
 </style>
