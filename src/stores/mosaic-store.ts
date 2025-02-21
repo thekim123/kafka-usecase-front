@@ -2,6 +2,7 @@ import {defineStore} from "pinia";
 import {Rect} from "@/types/rect";
 import {VideoService} from "@/services/video-service";
 import {transformSequenceData} from "@/util/transform-sequence-data";
+import router from "@/router";
 
 export const useMosaicStore = defineStore('mosaicStore', {
   state: () => ({
@@ -47,6 +48,7 @@ export const useMosaicStore = defineStore('mosaicStore', {
     async saveAllMosaics(videoId: string) {
       try {
         await VideoService.saveAllMosaics(videoId, this.mosaics, this.total_frames, this.fps);
+        router.push("/videos");
       } catch (e) {
         console.log(`save all mosaics is failed: ${e}`);
       }
