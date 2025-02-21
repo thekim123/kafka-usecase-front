@@ -34,6 +34,8 @@ export default defineComponent({
     const validateVideoStatus = (video: Video) => {
       if (video.videoStatus === "REGISTERED") {
         alert("아직 작업에 필요한 작업을 하는중이에요.")
+      } else if (video.videoStatus === "ERROR") {
+        alert("예상하지 못한 에러가 발생했습니다. 다시 작업을 시작해주세요")
       } else if (video.videoStatus === "COMPLETE") {
         router.push(`/final/${video.videoId}`);
       } else {
@@ -41,17 +43,23 @@ export default defineComponent({
       }
     };
 
-    const getStatusText = (status: string): string => {
-      switch (status) {
-        case "REGISTERED":
-          return "처리중";
-        case "READY":
-          return "보정 가능";
-        case "COMPLETE":
-          return "처리 완료";
-        default:
-          return "알 수 없음";
-      }
+    const statusTextMap: Record<string, string> = {
+      REGISTERED: "처리중",
+      READY: "보정 가능",
+      COMPLETE: "처리 완료",
+      ERROR: "오류발생"
+    };
+
+    const getStatusText = (status: string): string => statusTextMap[status] || "알 수 없음";
+
+
+    const getStatusClasses = (status: string) => {
+      return {
+        "complete-video": status === "COMPLETE",
+        "registered-video": status === "REGISTERED",
+        "ready-video": status === "READY",
+        "errored-video": status === "ERROR",
+      };
     };
 
 
@@ -60,7 +68,7 @@ export default defineComponent({
       loadVideos(page);
     });
 
-    return {videoList, selectedVideo, selectVideo, loadVideos, validateVideoStatus, getStatusText};
+    return {videoList, selectedVideo, selectVideo, loadVideos, validateVideoStatus, getStatusText, getStatusClasses};
   },
   methods: {
     openModal() {
@@ -87,27 +95,16 @@ export default defineComponent({
     <ul>
       <li v-for="item in videoList" :key="item.videoId">
         <a @click.prevent="validateVideoStatus(item)">
-              <button class="video-status" :class="{
-              'complete-video': item.videoStatus === 'COMPLETE',
-              'registered-video': item.videoStatus === 'REGISTERED',
-              'ready-video' : item.videoStatus === 'READY'
-            }">
-      {{ getStatusText(item.videoStatus) }}
-        </button>
-          <p :class="{
-            'complete-video': item.videoStatus === 'COMPLETE',
-            'registered-video': item.videoStatus === 'REGISTERED',
-            }">
+          <button class="video-status" :class="getStatusClasses(item.videoStatus)">
+            {{ getStatusText(item.videoStatus) }}
+          </button>
+          <p :class="getStatusClasses(item.videoStatus)">
             <strong>작업명:</strong> {{ item.workTitle }}
           </p>
-          <p :class="{
-            'complete-video': item.videoStatus === 'COMPLETE',
-            'registered-video': item.videoStatus === 'REGISTERED'
-           }">
+          <p :class="getStatusClasses(item.videoStatus)">
             <strong>비디오 파일명:</strong> {{ item.videoTitle }}
           </p>
         </a>
-
 
 
         <hr/>
@@ -163,5 +160,9 @@ p {
 
 .ready-video {
   color: hsla(160, 100%, 37%, 1);
+}
+
+.errored-video {
+  color: darkgrey;
 }
 </style>

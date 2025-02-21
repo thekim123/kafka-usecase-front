@@ -54,7 +54,7 @@ export const VideoService = {
 
   async saveAllMosaics(videoId: string, mosaic: Record<number, Rect[]>, totalFrames: number, fps: number) {
     console.log(`mosaics: ${mosaic}, totalFrames: ${totalFrames}, fps: ${fps}`);
-    const payload: SequenceItem[] = convertMosaicsToPythonFormat(mosaic);
+    const payload: { sequence: SequenceItem[] } = convertMosaicsToPythonFormat(mosaic);
     console.log(payload);
     await api.post(`/api/video/finalize/${videoId}`, payload);
   },
