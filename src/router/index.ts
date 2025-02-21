@@ -4,7 +4,6 @@ import Login from '../views/Login.vue';
 import Join from '../views/Join.vue';
 import {useAuthStore} from '@/stores/auth-store';
 import api from '@/services/api';
-import Converter from '@/layouts/Converter.vue';
 import BoardList from '@/layouts/BoardList.vue';
 import {AxiosError} from 'axios';
 import VideoList from "@/layouts/VideoList.vue";
@@ -16,7 +15,6 @@ const routes = [
   {path: '/login', name: 'Login', component: Login},
   {path: '/join', name: 'Join', component: Join},
   {path: '/board', name: 'Board', component: BoardList},
-  {path: '/convert', name: 'Convert', component: Converter},
   {path: '/videos', name: 'VideoList', component: VideoList},
   {path: '/video/:videoId', name: 'VideoDetail', component: VideoDetail},
   {path: '/final/:videoId', name: 'VideoDownload', component: videoDwonload}

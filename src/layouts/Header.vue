@@ -4,7 +4,6 @@
       <div class="nav-bar">
         <router-link :to="{ name: 'Home' }">Home</router-link>
         <router-link :to="{ name: 'Board' }">Board</router-link>
-        <router-link :to="{ name: 'Convert' }">Converter</router-link>
         <router-link :to="{ name: 'VideoList' }">VideoList</router-link>
       </div>
       <div class="btn">

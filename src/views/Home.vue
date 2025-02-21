@@ -13,12 +13,11 @@ import {useUserStore} from "@/stores/user-store";
 import api from "@/services/api";
 import Header from "@/layouts/Header.vue";
 import BoardList from "@/layouts/BoardList.vue";
-import Converter from "@/layouts/Converter.vue";
 import VideoList from "@/layouts/VideoList.vue";
 
 export default defineComponent({
   name: 'Home',
-  components: {Header, BoardList, Converter, VideoList},
+  components: {Header, BoardList, VideoList},
 
   setup() {
     const userStore = useUserStore();
