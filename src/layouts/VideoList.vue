@@ -39,16 +39,28 @@ export default defineComponent({
       } else {
         router.push(`/video/${video.videoId}`);
       }
+    };
 
+    const getStatusText = (status: string): string => {
+      switch (status) {
+        case "REGISTERED":
+          return "처리중";
+        case "READY":
+          return "보정 가능";
+        case "COMPLETE":
+          return "처리 완료";
+        default:
+          return "알 수 없음";
+      }
+    };
 
-    }
 
     // 컴포넌트가 마운트 되었을 때 데이터 로드
     onMounted(() => {
       loadVideos(page);
     });
 
-    return {videoList, selectedVideo, selectVideo, loadVideos, validateVideoStatus};
+    return {videoList, selectedVideo, selectVideo, loadVideos, validateVideoStatus, getStatusText};
   },
   methods: {
     openModal() {
@@ -75,9 +87,16 @@ export default defineComponent({
     <ul>
       <li v-for="item in videoList" :key="item.videoId">
         <a @click.prevent="validateVideoStatus(item)">
+              <button class="video-status" :class="{
+              'complete-video': item.videoStatus === 'COMPLETE',
+              'registered-video': item.videoStatus === 'REGISTERED',
+              'ready-video' : item.videoStatus === 'READY'
+            }">
+      {{ getStatusText(item.videoStatus) }}
+        </button>
           <p :class="{
             'complete-video': item.videoStatus === 'COMPLETE',
-            'registered-video': item.videoStatus === 'REGISTERED'
+            'registered-video': item.videoStatus === 'REGISTERED',
             }">
             <strong>작업명:</strong> {{ item.workTitle }}
           </p>
@@ -88,6 +107,8 @@ export default defineComponent({
             <strong>비디오 파일명:</strong> {{ item.videoTitle }}
           </p>
         </a>
+
+
 
         <hr/>
       </li>
@@ -122,11 +143,25 @@ p {
   font-weight: 800;
 }
 
+
+.video-status {
+  float: right; /* 맨 오른쪽 끝에 배치 */
+  font-weight: bold;
+  margin-top: 25px;
+  border: #2c3e50;
+  border-radius: 10px;
+  width: 100px;
+}
+
 .complete-video {
   color: mediumpurple; /* 연한 초록색 */
 }
 
 .registered-video {
   color: deeppink; /* 연한 초록색 */
+}
+
+.ready-video {
+  color: hsla(160, 100%, 37%, 1);
 }
 </style>
