@@ -17,7 +17,7 @@ export function transformSequenceData(data: PythonRectData): Array<{ frameSequen
 
 export function convertMosaicsToPythonFormat(
   mosaics: Record<number, Rect[]>,
-): SequenceItem[] {
+): { sequence: SequenceItem[] } {
   const sequence: SequenceItem[] = Object.keys(mosaics).map(frameKey => {
     const frameSeq = Number(frameKey);
     const person: PersonRect[] = mosaics[frameSeq].map(rect => ({
@@ -28,6 +28,7 @@ export function convertMosaicsToPythonFormat(
     }));
     return {seq: frameSeq, person};
   });
-  return sequence;
+  return { sequence };
 
 }
+
