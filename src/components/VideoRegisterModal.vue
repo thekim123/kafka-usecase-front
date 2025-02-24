@@ -17,7 +17,8 @@
 
       </section>
       <section>
-        <button @click="registerVideo">등록</button>
+        <button @click="registerVideo" :disabled="isSubmitting">
+          {{ isSubmitting ? "등록 중..." : "등록" }}</button>
         <button @click="closeModal">Close</button>
       </section>
     </div>
@@ -37,6 +38,7 @@ export default {
       targetImage: [] as File[], // 비식별 대상 이미지들을 저장할 배열
       imagePreviews: [] as string[], // 이미지 미리보기 배열
       videoSrc: '',
+      isSubmitting: false, // 연속 등록 방지 플래그
     };
   },
   setup() {
@@ -47,6 +49,7 @@ export default {
       this.$emit("close"); // 부모 컴포넌트에 이벤트 전달
     },
     registerVideo: async function () {
+      if (this.isSubmitting) return; // 이미 요청 중이면 다시 실행 X
       if (!this.videoFile) {
         alert('비디오 파일을 등록해주세요.');
         return;
@@ -58,6 +61,8 @@ export default {
       // }
 
       try {
+        this.isSubmitting = true; // 요청 시작 시 플래그 활성화
+
         const request: VideoRegisterRequest = {
           workTitle: this.workTitle,
           file: this.videoFile,
@@ -70,6 +75,8 @@ export default {
       } catch (error) {
         console.log(error);
         alert("Failed to register video.");
+      } finally {
+        this.isSubmitting = false; // 요청 완료 후 플래그 해제
       }
     },
     changeVideo(event: Event) {
