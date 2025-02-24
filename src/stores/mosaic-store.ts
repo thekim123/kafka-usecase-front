@@ -31,6 +31,9 @@ export const useMosaicStore = defineStore('mosaicStore', {
       this.mosaics[frameSequence] = rects;
     },
     pushMosaic(frameSequence: number, rect: Rect) {
+      if (!this.mosaics[frameSequence]) {
+        this.mosaics[frameSequence] = [];
+      }
       this.mosaics[frameSequence].push(rect);
     },
     getMosaics(frameSequence: number): Rect[] {
