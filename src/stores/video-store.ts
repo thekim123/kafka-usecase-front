@@ -13,9 +13,8 @@ export const useVideoStore
   const duration = ref(0);
 
   const videoList = ref<Video[]>([]);
-  const page: Page = PageUtil.createDefaultPage();
+  const page = ref<Page>(PageUtil.createDefaultPage());
 
-  const loadVideos = async (p: Page) => {
     try {
       const list = await VideoService.fetchVideoList(p);
       videoList.value = list.content;
