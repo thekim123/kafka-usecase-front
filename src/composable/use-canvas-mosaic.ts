@@ -50,7 +50,6 @@ export function useCanvasMosaic(canvas: Ref<HTMLCanvasElement | null>, frameSequ
   function onMouseDown(e: MouseEvent) {
     if (!canvas.value) return;
     const {x, y} = getScaledCoordinates(e, canvas.value);
-    const rect = canvas.value.getBoundingClientRect();
     isDragging.value = true;
     startX.value = x;
     startY.value = y;
@@ -60,7 +59,6 @@ export function useCanvasMosaic(canvas: Ref<HTMLCanvasElement | null>, frameSequ
   function onMouseMove(e: MouseEvent) {
     if (!isDragging.value || !canvas.value) return;
     const { x: currentX, y: currentY } = getScaledCoordinates(e, canvas.value);
-    // const rect = canvas.value.getBoundingClientRect();
     currentRect.value = {
       x: Math.round(Math.min(startX.value, currentX)),
       y: Math.round(Math.min(startY.value, currentY)),
