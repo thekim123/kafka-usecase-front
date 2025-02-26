@@ -2,6 +2,7 @@
 import {computed, ref, Ref} from "vue";
 import {Rect} from "@/types/rect"
 import {useMosaicStore} from "@/stores/mosaic-store";
+import {getScaledCoordinates} from "@/util/scale-util";
 
 export function useCanvasMosaic(canvas: Ref<HTMLCanvasElement | null>, frameSequence: Ref<number>) {
   // 저장된 모자이크 영역 좌표
@@ -20,6 +21,14 @@ export function useCanvasMosaic(canvas: Ref<HTMLCanvasElement | null>, frameSequ
   function init() {
     if (!canvas.value) return;
     const c = canvas.value;
+
+    // 브라우저에 표시되는 크기(영상 컨테이너)에 맞추기
+    const container = c?.parentElement;
+    if (container) {
+      c.style.width = `${container.clientWidth}px`;
+      c.style.height = `${container.clientHeight}px`;
+    }
+
     c.addEventListener("mousedown", onMouseDown);
     c.addEventListener("mousemove", onMouseMove);
     c.addEventListener("mouseup", onMouseUp);
@@ -40,18 +49,18 @@ export function useCanvasMosaic(canvas: Ref<HTMLCanvasElement | null>, frameSequ
 
   function onMouseDown(e: MouseEvent) {
     if (!canvas.value) return;
+    const {x, y} = getScaledCoordinates(e, canvas.value);
     const rect = canvas.value.getBoundingClientRect();
     isDragging.value = true;
-    startX.value = e.clientX - rect.left;
-    startY.value = e.clientY - rect.top;
-    currentRect.value = {x: startX.value, y: startY.value, width: 0, height: 0};
+    startX.value = x;
+    startY.value = y;
+    currentRect.value = {x, y, width: 0, height: 0};
   }
 
   function onMouseMove(e: MouseEvent) {
     if (!isDragging.value || !canvas.value) return;
-    const rect = canvas.value.getBoundingClientRect();
-    const currentX = e.clientX - rect.left;
-    const currentY = e.clientY - rect.top;
+    const { x: currentX, y: currentY } = getScaledCoordinates(e, canvas.value);
+    // const rect = canvas.value.getBoundingClientRect();
     currentRect.value = {
       x: Math.round(Math.min(startX.value, currentX)),
       y: Math.round(Math.min(startY.value, currentY)),
@@ -72,12 +81,11 @@ export function useCanvasMosaic(canvas: Ref<HTMLCanvasElement | null>, frameSequ
   function onCanvasContextMenu(e: MouseEvent) {
     console.log('onCanvasContextMenu is called');
     e.preventDefault();
-    if (!canvas.value) {
-      return;
-    }
-    const rect = canvas.value.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
+    if (!canvas.value) { return; }
+    // const rect = canvas.value.getBoundingClientRect();
+    const {x, y} = getScaledCoordinates(e, canvas.value);
+    // const x = e.clientX - rect.left;
+    // const y = e.clientY - rect.top;
     const index = mosaicRects.value.findIndex(r =>
       x >= r.x && x <= r.x + r.width && y >= r.y && y <= r.y + r.height
     );

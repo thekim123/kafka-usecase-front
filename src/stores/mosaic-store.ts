@@ -24,6 +24,9 @@ export const useMosaicStore = defineStore('mosaicStore', {
       transformedRects.forEach(item => {
         record[item.frameSequence] = item.rects;
       });
+      if (record[1]) {
+        record[0] = record[1];
+      }
       this.mosaics = record;
       console.log(`this mosaic: ${JSON.stringify(this.mosaics)}`);
     },

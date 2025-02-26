@@ -1,5 +1,5 @@
 <script lang="ts">
-import {defineComponent, ref, nextTick, watchEffect, onMounted} from "vue";
+import {defineComponent, nextTick, onMounted, ref} from "vue";
 import {useRoute} from "vue-router";
 import VideoTimeline from "@/components/VideoTimeline.vue";
 import {VideoService} from "@/services/video-service";
@@ -7,7 +7,6 @@ import {useKeyboardControl} from "@/composable/use-keyboard-control";
 import {useVideoPlayer} from "@/composable/use-video-player";
 import type {TimelineMetadata, VideoDetail} from "@/types/video";
 import {useCanvasMosaic} from "@/composable/use-canvas-mosaic";
-import {Rect} from "@/types/rect";
 import {useMosaicStore} from "@/stores/mosaic-store";
 
 export default defineComponent({
@@ -32,7 +31,6 @@ export default defineComponent({
       videoElement,
       canvasElement,
       currentFrameSequence,
-      captureFrame,
       changeFrame,
       prevFrame,
       nextFrame,
@@ -73,7 +71,7 @@ export default defineComponent({
         videoElement.value.addEventListener('loadedmetadata', async () => {
           timelineFrames.value = await VideoService.fetchTimelineMetadata(videoId);
           // 초기 프레임 캡처 (예: 첫 프레임)
-          await captureFrame(currentFrameSequence.value);
+          // await captureFrame(currentFrameSequence.value);
 
           if (videoElement.value && canvasElement.value) {
             canvasElement.value.width = videoElement.value.videoWidth;
@@ -87,7 +85,7 @@ export default defineComponent({
 
       await mosaicStore.loadRects(videoId);
       console.log(currentFrameSequence.value);
-      await changeFrame(currentFrameSequence.value);
+      await changeFrame(1);
       const mosaics = mosaicStore.getMosaics(currentFrameSequence.value);
       setMosaicRects(mosaics);
     });
@@ -147,16 +145,22 @@ export default defineComponent({
     <p v-if="video"><strong>비디오 파일명:</strong> {{ video.videoTitle }}</p>
     <button @click="saveMosaicRects">모자이크 저장</button>
     <button @click="onEditingComplete">완료</button>
-    <div class="video-container">
-      <button @click="moveFrameWithMosaic('PREVIOUS')" :disabled="currentFrameSequence === 0">◀️</button>
+    <div class="video-container" ref="videoContainer">
+      <button class="frame-btn" @click="moveFrameWithMosaic('PREVIOUS')" :disabled="currentFrameSequence === 1">◀️</button>
       <div class="frame-container" style="position: relative;">
-        <video ref="videoElement" crossorigin="anonymous" :src="videoSrc"/>
+        <video ref="videoElement" crossorigin="anonymous" :src="videoSrc" style="width: 100%; height: auto"/>
         <canvas ref="canvasElement"
-                style="position: absolute; top: 0; left: 0; pointer-events: auto;"
+                style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"
         />
       </div>
-      <button @click="moveFrameWithMosaic('NEXT')" :disabled="currentFrameSequence === totalFrameCount - 1">▶️</button>
+      <button class="frame-btn" @click="moveFrameWithMosaic('NEXT')" :disabled="currentFrameSequence === totalFrameCount - 1">▶️</button>
     </div>
     <VideoTimeline :timelineFrames="timelineFrames" @frameSelected="onFrameSelected"/>
   </div>
 </template>
+
+<style scoped>
+.frame-btn {
+  font-size: 30px;
+}
+</style>

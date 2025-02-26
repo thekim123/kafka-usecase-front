@@ -13,9 +13,21 @@ export const useVideoStore
   const duration = ref(0);
 
   const videoList = ref<Video[]>([]);
+  // const page: Page = PageUtil.createDefaultPage();
   const page = ref<Page>(PageUtil.createDefaultPage());
 
+  // const loadVideos = async (p: Page = PageUtil.createDefaultPage()) => {
+  //   try {
+  //     const list = await VideoService.fetchVideoList(p);
+  //     videoList.value = list.content;
+  //   } catch (error) {
+  //     console.error('Failed to fetch video list', error);
+  //   }
+  // };
+  const loadVideos = async (p: Page = page.value) => {
     try {
+      console.log("$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+      console.log("Fetching videos with page !!!!! :", p);
       const list = await VideoService.fetchVideoList(p);
       videoList.value = list.content;
     } catch (error) {
