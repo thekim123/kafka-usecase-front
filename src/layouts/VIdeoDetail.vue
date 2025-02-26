@@ -16,6 +16,8 @@ export default defineComponent({
     const route = useRoute();
     const rawVideoIdParam = route.params.videoId;
     const videoId = Array.isArray(rawVideoIdParam) ? rawVideoIdParam[0] : rawVideoIdParam;
+    const originalMosaics = ref<Record<number, Rect[]>>({});  // 원본 좌표
+
 
     // 비디오 상세 정보
     const video = ref<VideoDetail | null>(null);
@@ -84,7 +86,9 @@ export default defineComponent({
 
 
       await mosaicStore.loadRects(videoId);
-      console.log(currentFrameSequence.value);
+      // console.log(currentFrameSequence.value);
+      originalMosaics.value = JSON.parse(JSON.stringify(mosaicStore.mosaics));
+
       await changeFrame(1);
       const mosaics = mosaicStore.getMosaics(currentFrameSequence.value);
       setMosaicRects(mosaics);
@@ -117,8 +121,27 @@ export default defineComponent({
     }
 
     const onEditingComplete = async () => {
+      await saveMosaicRects(); // 현재 프레임의 수정 정보 저장
       await mosaicStore.saveAllMosaics(videoId);
     }
+
+    // 모든 프레임 변경사항 초기화: 서버 원본 데이터를 재로딩하여 전체를 복원
+    const resetAllMosaics = async () => {
+      await mosaicStore.loadRects(videoId);
+      // 원본 데이터를 originalMosaics에 다시 업데이트 (필요시)
+      originalMosaics.value = JSON.parse(JSON.stringify(mosaicStore.mosaics));
+      const mosaics = mosaicStore.getMosaics(currentFrameSequence.value);
+      setMosaicRects(mosaics);
+    };
+
+    // 현재 프레임 변경사항 초기화: 현재 프레임의 데이터만 원본으로 복원
+    const resetCurrentMosaics = () => {
+      const originalForCurrent = originalMosaics.value[currentFrameSequence.value] || [];
+      // mosaicStore의 현재 프레임 데이터를 원본으로 덮어쓰기
+      mosaicStore.pushMosaicArray(currentFrameSequence.value, originalForCurrent);
+      setMosaicRects(originalForCurrent);
+    };
+
 
     return {
       video,
@@ -133,6 +156,8 @@ export default defineComponent({
       saveMosaicRects,
       moveFrameWithMosaic,
       onEditingComplete,
+      resetAllMosaics,
+      resetCurrentMosaics,
     };
   },
 });
@@ -143,17 +168,25 @@ export default defineComponent({
     <h3>비디오 상세 정보</h3>
     <p v-if="video"><strong>작업명:</strong> {{ video.workTitle }}</p>
     <p v-if="video"><strong>비디오 파일명:</strong> {{ video.videoTitle }}</p>
-    <button @click="saveMosaicRects">모자이크 저장</button>
-    <button @click="onEditingComplete">완료</button>
+    <div class="btn-container">
+      <div class="refresh-btn-container">
+        <button @click="resetAllMosaics()">모든 프레임 변경사항 초기화</button>
+        <button @click="resetCurrentMosaics()">현재 프레임 변경사항 초기화</button>
+      </div>
+      <button @click="onEditingComplete">완료</button>
+    </div>
     <div class="video-container" ref="videoContainer">
-      <button class="frame-btn" @click="moveFrameWithMosaic('PREVIOUS')" :disabled="currentFrameSequence === 1">◀️</button>
+      <button class="frame-btn" @click="moveFrameWithMosaic('PREVIOUS')" :disabled="currentFrameSequence === 1">◀️
+      </button>
       <div class="frame-container" style="position: relative;">
         <video ref="videoElement" crossorigin="anonymous" :src="videoSrc" style="width: 100%; height: auto"/>
         <canvas ref="canvasElement"
                 style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: auto;"
         />
       </div>
-      <button class="frame-btn" @click="moveFrameWithMosaic('NEXT')" :disabled="currentFrameSequence === totalFrameCount - 1">▶️</button>
+      <button class="frame-btn" @click="moveFrameWithMosaic('NEXT')"
+              :disabled="currentFrameSequence === totalFrameCount - 1">▶️
+      </button>
     </div>
     <VideoTimeline :timelineFrames="timelineFrames" @frameSelected="onFrameSelected"/>
   </div>
@@ -162,5 +195,18 @@ export default defineComponent({
 <style scoped>
 .frame-btn {
   font-size: 30px;
+}
+
+.refresh-btn-container {
+  display: flex;
+  gap: 5px;
+
+}
+
+.btn-container {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  gap: 20px;
 }
 </style>
