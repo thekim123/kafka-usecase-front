@@ -53,10 +53,10 @@ export function useCanvasMosaic(canvas: Ref<HTMLCanvasElement | null>, frameSequ
     const currentX = e.clientX - rect.left;
     const currentY = e.clientY - rect.top;
     currentRect.value = {
-      x: Math.min(startX.value, currentX),
-      y: Math.min(startY.value, currentY),
-      width: Math.abs(currentX - startX.value),
-      height: Math.abs(currentY - startY.value)
+      x: Math.round(Math.min(startX.value, currentX)),
+      y: Math.round(Math.min(startY.value, currentY)),
+      width: Math.round(Math.abs(currentX - startX.value)),
+      height: Math.round(Math.abs(currentY - startY.value))
     };
   }
 
